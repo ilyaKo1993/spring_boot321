@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,7 @@ public class UserController {
     }
 
 
-    @PreAuthorize(value = "hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('ADMIN,USER')")
+
     @GetMapping(value = "/user")
     public String getUserPage(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);

@@ -1,60 +1,40 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.Data;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.NotEmpty;
 
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Data
 @Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
-    @NotEmpty(message = "Имя не должно быть пустым")
-    @Size(min = 3, max = 30, message = "Имя должно быть от 3х до 30 символов")
-    @Pattern(message = "Используйте латинский алфавит от A-Z (пример: Ilya): ${validatedValue}",
-            regexp = "^[A-Z][a-z]*(\\s(([a-z]{1,3})|(([a-z]+\\')?[A-Z][a-z]*)))*$")
     private String name;
 
     @Column(name = "last_name")
-    @NotEmpty(message = "Фамилия не должна быть пустым")
-    @Size(min = 3, max = 30, message = "Фамилия должна быть от 3х до 30 символов")
-    @Pattern(message = "Используйте латинский алфавит от A-Z (пример: Ilya): ${validatedValue}",
-            regexp = "^[A-Z][a-z]*(\\s(([a-z]{1,3})|(([a-z]+\\')?[A-Z][a-z]*)))*$")
     private String lastName;
 
+    private int age;
 
-    @Min(value = 0, message = "Возраст должен быть больше нуля")
-    @Column(name = "age")
-    private int Age;
-
-    @NotEmpty(message = "Логин не должен быть пустым")
-    @Size(min = 4, max = 30, message = "Логин должен быть от 4х до 30 символов")
-    @Column(name = "login")
     private String login;
 
-    @NotEmpty(message = "Пароль не должнен быть пустым")
-    @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+   @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -89,5 +69,70 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
